@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <metai charset="UTF-8">
+  <metai name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulir Penerima Bantuan</title>
+  <link rel="stylesheet" href="datapenerimabantuan.css">
+  <style>
+    .hasil-evaluasi {
+      margin: 20px 0;
+      padding: 15px;
+      border-radius: 8px;
+      display: none;
+    }
+    .layak { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    .tidak-layak { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+    .pertimbangan { background: #fff3cd; color: #856404; border: 1px solid #ffeaa7; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Formulir Pendaftaran Penerima Bantuan</h1>
+
+   
+    <form id="form-bantuan">
+      
+      <div class="form-group">
+        <label for="nama">Nama Lengkap</label>
+        <input type="text" id="nama" name="nama" required placeholder="Masukkan nama lengkap Anda">
+      </div>
+      
+      <div class="form-group">
+        <label for="tgl_lahir">Tanggal Lahir</label>
+        <input type="date" id="tgl_lahir" name="tgl_lahir" required>
+      </div>
+
+      <div class="form-group">
+        <label for="alamat">Alamat Lengkap</label>
+        <textarea id="alamat" name="alamat" rows="3" required placeholder="Masukkan alamat lengkap"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="nik">NIK (16 digit)</label>
+        <input type="text" id="nik" name="nik" required maxlength="16" placeholder="Contoh: 3273xxxxxxxxxxxx">
+      </div>
+      
+      <div class="form-group">
+        <label for="jenis_pekerjaan">Jenis Pekerjaan</label>
+        <select id="jenis_pekerjaan" name="jenis_pekerjaan" required>
+          <option value=""></option>
+          <option value="tidak_bekerja">Tidak Bekerja</option>
+          <option value="serabutan">Serabutan</option>
+          <option value="part_time">Paruh Waktu</option>
+          <option value="musiman">Musiman</option>
+          <option value="freelance">Freelance</option>
+          <option value="buruh">Buruh</option>
+          <option value="formal">Formal</option>
+          <option value="profesional">Profesional</option>
+          <option value="wirausaha">Wirausaha</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="penghasilan">Penghasilan per Bulan</label>
+        <select id="penghasilan" name="penghasilan" required>
+          <option value=""></option>
+          <option value="300000">0 - 300.000</option>
+          <option value="500000">300.000 - 500.000</option>
+          <option value="1000000">500.000 - 1.000.000</option>
+          <option value="1300000">1.000.000 - 1.300.000</option>
+          <option value="1500000">1.300.000 - 1.500.000</option>
+          <option value="2000000">1.500.000 - 2.000.000</option>
+          <option value="2300000">2.000.000 - 2.300.000</option>
+          <option value="2500000">2.300.000 - 2.500.000</option>
+          <option value="3000000">2.500.000 - 3.000.000</option>
+          <option value="3300000">3.000.000 - 3.300.000</option>
+          <option value="3500000">3.300.000 - 3.500.000</option>
+          <option value="4000000">3.500.000 - 4.000.000</option>
+          <option value="4300000">4.000.000 - 4.300.000</option>
+          <option value="4500000">4.300.000 - 4.500.000</option>
+          <option value="5000000">4.500.000 - 5.000.000</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="jumlah_tanggungan">Jumlah Tanggungan Keluarga</label>
+        <input type="number" id="jumlah_tanggungan" name="jumlah_tanggungan" min="0" max="20" required>
+      </div>
+
+      <div class="form-group">
+        <label for="status_ekonomi">Status Ekonomi</label>
+        <select id="status_ekonomi" name="status_ekonomi" required>
+          <option value=""></option>
+          <option value="sangat_rendah">Ekonomi Sangat Rendah</option>
+          <option value="rendah">Ekonomi Rendah</option>
+          <option value="menengah_bawah">Ekonomi Menengah Bawah</option>
+          <option value="menengah_atas">Ekonomi Menengah Atas</option>
+          <option value="tinggi">Ekonomi Tinggi</option>
+        </select>
+      </div>
+     
+      <div class="form-row">
+        <div class="form-group">
+          <label for="rt">RT</label>
+          <input type="number" id="rt" name="rt" min="1" max="100" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="rw">RW</label>
+          <input type="number" id="rw" name="rw" min="1" max="100" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="kelurahan">Kelurahan/Desa</label>
+        <input type="text" id="kelurahan" name="kelurahan" required>
+      </div>
+
+      <div class="form-group">
+        <label for="kecamatan">Kecamatan</label>
+        <input type="text" id="kecamatan" name="kecamatan" required>
+      </div>
+
+      <div class="form-group">
+        <label for="kota">Kota/Kabupaten</label>
+        <input type="text" id="kota" name="kota" required>
+      </div>
+
+      <div class="form-group">
+        <label for="provinsi">Provinsi</label>
+        <input type="text" id="provinsi" name="provinsi" required>
+      </div>
+
+ 
+      <div class="form-group">
+        <label for="operator_email">📧 Email Operator Penerima</label>
+        <input type="email" id="operator_email" name="operator_email" 
+               placeholder="alfinwahyu@gmail.com"required>
+      </div>
+
+      <div class="form-group">
+        <label for="operator_wa">📱 Nomor WhatsApp Operator</label>
+        <input type="text" id="operator_wa" name="operator_wa" 
+                placeholder="628123456789"required>  
+        <small>Format: 628123456789 (tanpa + dan spasi)</small>
+      </div>
+
+     
+      <div class="form-group">
+        <label for="foto_ktp">Foto KTP</label>
+        <input type="file" id="foto_ktp" name="foto_ktp" accept="image/*">
+      </div>
+
+      <div class="form-group">
+        <label for="foto_rumah">Foto Rumah</label>
+        <input type="file" id="foto_rumah" name="foto_rumah" accept="image/*">
+      </div>
+
+     
+      <div id="hasilEvaluasi" class="hasil-evaluasi">
+        <h3>Hasil Evaluasi Kelayakan</h3>
+        <p id="statusText"></p>
+        <p id="alasanText"></p>
+        <p id="skorText"></p>
+      </div>
+
+      <div class="form-group">
+        <button type="submit">Cek Kelayakan Bantuan</button>
+      </div>
+      
+    </form> 
+  </div>
+
+  <script src="datapenerimabantuan.js"></script>
+</body>
+</html>
