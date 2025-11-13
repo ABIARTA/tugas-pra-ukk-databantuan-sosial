@@ -1,129 +1,99 @@
-function kirimKeOperator(data) {
-    const operatorEmail = document.getElementById('operator_email').value;
-    
-    const subject = `🔔 PENDAFTARAN BANTUAN SOSIAL - ${data.nama}`;
-    const body = `
-📋 DATA CALON PENERIMA BANTUAN SOSIAL
+document.getElementById("form-bantuan").addEventListener("submit", function(e) {
+  e.preventDefault();
 
-🆔 DATA PRIBADI:
-• NIK: ${data.nik}
-• Nama: ${data.nama} 
-• Tanggal Lahir: ${data.tgl_lahir}
-• Telepon: ${data.telepon}
-• Email: ${data.email || 'Tidak ada'}
+  // Ambil semua data input
+  const nama = document.getElementById("nama").value;
+  const nik = document.getElementById("nik").value;
+  const tgl_lahir = document.getElementById("tgl_lahir").value;
+  const alamat = document.getElementById("alamat").value;
+  const pekerjaan = document.getElementById("jenis_pekerjaan").value;
+  const penghasilan = parseInt(document.getElementById("penghasilan").value);
+  const tanggungan = parseInt(document.getElementById("jumlah_tanggungan").value);
+  const statusEkonomi = document.getElementById("status_ekonomi").value;
+  const rt = document.getElementById("rt").value;
+  const rw = document.getElementById("rw").value;
+  const kelurahan = document.getElementById("kelurahan").value;
+  const kecamatan = document.getElementById("kecamatan").value;
+  const kota = document.getElementById("kota").value;
+  const provinsi = document.getElementById("provinsi").value;
 
-💰 DATA EKONOMI:
-• Penghasilan: Rp ${parseInt(data.penghasilan).toLocaleString('id-ID')}/bulan
-• Tanggungan: ${data.tanggungan} orang
-• Pekerjaan: ${data.pekerjaan}
-• Status Ekonomi: ${data.statusEkonomi}
+  // Variabel evaluasi
+  let skor = 0;
+  let alasan = [];
 
-🏠 ALAMAT:
-${data.alamat}
-RT ${data.rt}/RW ${data.rw}
-${data.kelurahan}, ${data.kecamatan}
-${data.kota}, ${data.provinsi}
+  // 🎯 Logika penilaian kelayakan
+  // Penghasilan rendah = skor tinggi
+  if (penghasilan <= 500000) { skor += 40; alasan.push("Penghasilan sangat rendah"); }
+  else if (penghasilan <= 1000000) { skor += 35; alasan.push("Penghasilan rendah"); }
+  else if (penghasilan <= 2000000) { skor += 25; alasan.push("Penghasilan menengah bawah"); }
+  else if (penghasilan <= 3000000) { skor += 10; alasan.push("Penghasilan menengah"); }
+  else { skor += 0; alasan.push("Penghasilan tinggi"); }
 
-🎯 HASIL EVALUASI SISTEM:
-• STATUS: ${data.statusBansos}
-• SKOR: ${data.skor} points
-• ALASAN: ${data.alasan.join(', ')}
+  // Jumlah tanggungan
+  if (tanggungan >= 5) { skor += 30; alasan.push("Tanggungan keluarga banyak"); }
+  else if (tanggungan >= 3) { skor += 20; alasan.push("Tanggungan keluarga sedang"); }
+  else if (tanggungan >= 1) { skor += 10; alasan.push("Tanggungan keluarga sedikit"); }
 
-⏰ Waktu Submit: ${new Date().toLocaleString('id-ID')}
+  // Status ekonomi
+  if (statusEkonomi === "sangat_rendah") skor += 30;
+  else if (statusEkonomi === "rendah") skor += 25;
+  else if (statusEkonomi === "menengah_bawah") skor += 15;
+  else if (statusEkonomi === "menengah_atas") skor += 5;
 
----
-📧 Data dikirim otomatis dari Sistem Bansos
-    `;
-    
-    window.location.href = `mailto:${operatorEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-}
+  // Jenis pekerjaan
+  if (["tidak_bekerja", "serabutan", "buruh", "musiman"].includes(pekerjaan))
+    skor += 20;
+  else if (["part_time", "freelance"].includes(pekerjaan))
+    skor += 10;
+  else skor += 0;
 
-function kirimKeWhatsApp(data) {
-    const noOperator = document.getElementById('operator_wa').value;
-    
-    const message = `
-🔔 *PENDAFTARAN BANTUAN SOSIAL*
+  // Hitung total skor maksimal 120
+  const persen = Math.min((skor / 120) * 100, 100);
 
-🆔 *DATA PRIBADI:*
-• NIK: ${data.nik}
-• Nama: ${data.nama}
-• Telepon: ${data.telepon}
+  let status;
+  if (persen >= 70) status = "LAYAK";
+  else if (persen >= 50) status = "PERLU PERTIMBANGAN";
+  else status = "TIDAK LAYAK";
 
-💰 *DATA EKONOMI:*
-• Penghasilan: Rp ${parseInt(data.penghasilan).toLocaleString('id-ID')}
-• Tanggungan: ${data.tanggungan} orang
-• Pekerjaan: ${data.pekerjaan}
-• Status: ${data.statusEkonomi}
+  // Tampilkan hasil di halaman
+  const hasilDiv = document.getElementById("hasilEvaluasi");
+  hasilDiv.style.display = "block";
+  hasilDiv.className = "hasil-evaluasi";
+  hasilDiv.classList.add(
+    status === "LAYAK"
+      ? "layak"
+      : status === "PERLU PERTIMBANGAN"
+      ? "pertimbangan"
+      : "tidak-layak"
+  );
 
-🎯 *HASIL EVALUASI:*
-• *${data.statusBansos}*
-• Skor: ${data.skor}
-• Alasan: ${data.alasan.join(', ')}
+  document.getElementById("statusText").textContent = `Status: ${status}`;
+  document.getElementById("skorText").textContent = `Skor: ${skor} (${persen.toFixed(1)}%)`;
+  document.getElementById("alasanText").textContent = `Alasan: ${alasan.join(", ")}`;
 
-🏠 *ALAMAT:*
-${data.alamat}, RT ${data.rt}/RW ${data.rw}
+  // Simpan ke localStorage
+  const dataForm = {
+    nama,
+    nik,
+    tgl_lahir,
+    alamat,
+    pekerjaan,
+    penghasilan,
+    tanggungan,
+    statusEkonomi,
+    rt,
+    rw,
+    kelurahan,
+    kecamatan,
+    kota,
+    provinsi,
+    statusBansos: status,
+    skor,
+    persen,
+    alasan
+  };
 
-⏰ *Waktu:* ${new Date().toLocaleString('id-ID')}
-
----
-*Sistem Bansos Otomatis*
-    `;
-    
-    window.open(`https://wa.me/${noOperator}?text=${encodeURIComponent(message)}`, '_blank');
-}
-
-function evaluasiKelayakan() {
-   
-    
-    const dataForm = {
-        nik: document.getElementById('nik').value,
-        nama: document.getElementById('nama').value,
-        tgl_lahir: document.getElementById('tgl_lahir').value,
-        penghasilan: document.getElementById('penghasilan').value,
-        tanggungan: document.getElementById('jumlah_tanggungan').value,
-        pekerjaan: document.getElementById('jenis_pekerjaan').options[document.getElementById('jenis_pekerjaan').selectedIndex].text,
-        statusEkonomi: document.getElementById('status_ekonomi').options[document.getElementById('status_ekonomi').selectedIndex].text,
-        alamat: document.getElementById('alamat').value,
-        rt: document.getElementById('rt').value,
-        rw: document.getElementById('rw').value,
-        kelurahan: document.getElementById('kelurahan').value,
-        kecamatan: document.getElementById('kecamatan').value,
-        kota: document.getElementById('kota').value,
-        provinsi: document.getElementById('provinsi').value,
-        telepon: document.getElementById('telepon').value,
-        email: document.getElementById('email').value,
-        statusBansos: status,
-        skor: skor,
-        alasan: alasan
-    };
-    
- 
-    let dataTersimpan = JSON.parse(localStorage.getItem('dataBansos') || '[]');
-    dataTersimpan.push(dataForm);
-    localStorage.setItem('dataBansos', JSON.stringify(dataTersimpan));
-    
-  
-    setTimeout(() => {
-        const konfirmasi = confirm(
-            `📊 HASIL EVALUASI:\n\n` +
-            `Status: ${status}\n` +
-            `Skor: ${skor} points\n\n` +
-            `Kirim data ke Operator?\n` +
-            `✓ Email + WhatsApp\n` +
-            `✓ Data sudah tersimpan`
-        );
-        
-        if (konfirmasi) {
-          
-            kirimKeOperator(dataForm);
-            
-        
-            setTimeout(() => {
-                const kirimWA = confirm("Email sudah terbuka. Sekarang buka WhatsApp untuk kirim ke operator?");
-                if (kirimWA) {
-                    kirimKeWhatsApp(dataForm);
-                }
-            }, 1000);
-        }
-    }, 1500);
-}
+  let dataTersimpan = JSON.parse(localStorage.getItem("dataBansos") || "[]");
+  dataTersimpan.push(dataForm);
+  localStorage.setItem("dataBansos", JSON.stringify(dataTersimpan));
+});
